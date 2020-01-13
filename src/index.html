@@ -6,10 +6,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>ToDo</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500i,900&display=swap" rel="stylesheet">
 </head>
 
 <body>
+  <div class="main">
+    <header class="header">
+      To Do List
+    </header>
+    <div class="todo">
+      <div class="todo__input-wrapper">
+        <input class="todo__input input input_text" id="todo-input" type="text" placeholder="What needs to be done ?">
+        <button class="todo__toggle-button button">❯</button>
+      </div>
 
+      <div class="todo__todos-container" id="todos-container">
+
+        <div class="todo-item" data-todoId="1">
+          <!-- <input type="text" value="ToDo" class="input input_text todo-item__input todo-item__input_for-edit"> -->
+          <label class="todo-item__label" for="todo-1">
+            <input class="todo-item__checkbox" type="checkbox" id="todo-1">
+            <div class="todo-item__toggle"></div>
+          </label>
+          <span class="todo-item__input">ToDo </span>
+          <div class="todo-item__delete-btn"></div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
 </body>
 
 </html>

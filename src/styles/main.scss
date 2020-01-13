@@ -1,0 +1,35 @@
+@import "./variables.scss";
+@import "./atomic.scss";
+@import "./header";
+@import "./input";
+@import "./button";
+@import "./todo";
+@import "./todo-item";
+
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 20px;
+}
+
+body {
+  margin: 0;
+  background-color: $background-color;
+
+  font-family: "Roboto", sans-serif;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  width: 50%;
+  margin: auto;
+  padding-top: 3%;
+}

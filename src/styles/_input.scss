@@ -1,0 +1,13 @@
+.input {
+  outline: none;
+
+  &_text {
+    font-size: 1rem;
+    color: $gray_dark;
+
+    &::placeholder {
+      color: rgba($color: $gray, $alpha: 0.6);
+      font-style: italic;
+    }
+  }
+}
