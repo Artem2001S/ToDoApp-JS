@@ -28,6 +28,11 @@
       opacity: 0.6;
     }
 
+    &_completed {
+      color: rgba($color: $crimson, $alpha: 0.6);
+      text-decoration: line-through;
+    }
+
     &_for-edit {
       position: absolute;
       left: calc(2rem + 0.9rem);
@@ -43,7 +48,7 @@
 
   &__delete-btn {
     position: absolute;
-    bottom: 8px;
+    bottom: 50%;
     right: 10px;
 
     width: 1.5rem;
@@ -53,6 +58,7 @@
     background-color: $crimson;
     cursor: pointer;
 
+    transform: translateY(50%);
     transition: opacity 0.5s;
     opacity: 0;
 
