@@ -4,3 +4,16 @@ $white: #ffffff;
 $gray: #bdbdbd;
 $gray_dark: #5e5e5e;
 $green: #1f8d1f;
+
+@mixin toggle-pseudoelement {
+  content: "✓";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  color: $green;
+  font-weight: bold;
+}

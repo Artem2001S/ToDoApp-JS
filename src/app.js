@@ -1,29 +1,52 @@
 import './styles/main.scss';
+import Storage from './components/Storage';
+import TodoItem from './components/TodoItem';
 
-const todosContainer = document.getElementById('todos-container');
-let isDbClickActive = false;
+const LOCAL_STORAGE_KEY = 'todoItems';
 
-todosContainer.addEventListener('dblclick', (e) => {
-  if (e.target.classList.contains('todo-item__input') && !isDbClickActive) {
-    isDbClickActive = true;
+const storage = new Storage();
+const isThereTodos = storage.initFromLocalStorage(LOCAL_STORAGE_KEY);
 
-    const parent = e.target.parentNode;
-    const value = e.target.textContent;
-    const id = parent.dataset.todoid;
+const variables = {
+  isEditModeActive: false,
+};
 
-    e.target.textContent = '';
-    const inputForEdit = document.createElement('input');
-    inputForEdit.type = 'text';
-    inputForEdit.classList.add('input', 'todo-item__input', 'input_text', 'todo-item__input_for-edit');
-    inputForEdit.value = value;
+const $todoInput = document.getElementById('todo-input');
+const $todoContainer = document.querySelector('#todos-container');
 
-    inputForEdit.addEventListener('blur', () => {
-      isDbClickActive = false;
-      e.target.textContent = inputForEdit.value;
-      parent.removeChild(inputForEdit);
-    });
+if (isThereTodos) {
+  const newData = storage.getData()
+    .map((todoItem) => new TodoItem(todoItem.todoText, todoItem.todoId));
+  storage.setData(newData);
 
-    parent.prepend(inputForEdit);
-    inputForEdit.focus();
+  storage.getData().forEach((todoItem) => {
+    $todoContainer.append(todoItem.getTodoDOM());
+  });
+}
+
+$todoInput.addEventListener('keypress', ({ key }) => {
+  if (key === 'Enter') {
+    const todoItem = new TodoItem($todoInput.value.trim());
+    $todoContainer.append(todoItem.getTodoDOM());
+    $todoInput.value = '';
+
+    storage.addObject(todoItem);
   }
 });
+
+
+$todoContainer.addEventListener('dblclick', ({ target }) => {
+  if (target.classList.contains('todo-item__input') && !variables.isEditModeActive) {
+    variables.isEditModeActive = true;
+
+    const $parent = target.parentNode;
+    const id = Number($parent.dataset.todoid);
+
+    const currentTodoObj = storage.getObject((todo) => todo.todoId === id);
+
+    currentTodoObj.createInputForEditTodo(storage, variables);
+  }
+});
+
+window.addEventListener('beforeunload',
+  () => storage.saveToLocalStorage(LOCAL_STORAGE_KEY));
