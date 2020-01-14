@@ -23,6 +23,7 @@
     word-break: break-word;
 
     font-size: 1.1rem;
+    transition: color 0.5s ease;
 
     &:hover ~ .todo-item__delete-btn {
       opacity: 0.6;

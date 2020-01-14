@@ -1,0 +1,65 @@
+.filters {
+  display: flex;
+  justify-content: space-around;
+
+  width: 100%;
+
+  border-radius: 25px;
+
+  @include media-laptop(){
+    flex-wrap: wrap;
+  }
+
+  @include media-mobile(){
+    flex-direction: column;
+  }
+
+  &__button {
+    padding: 0.3rem 0.8rem;
+
+    color: $gray_dark;
+    font-size: 0.9rem;
+
+    transition: color 0.2s ease;
+
+    @include media-laptop() {
+      font-size: 1rem;
+      margin: 0 10px;
+      margin-top: 8px;
+    }
+
+    &:hover {
+      border: 1px solid rgba($color: $crimson, $alpha: 0.3);
+      box-shadow: none;
+      color: rgba($color: $crimson, $alpha: 0.55);
+    }
+
+    &_active {
+      border: 1px solid rgba($color: $crimson, $alpha: 0.5);
+      box-shadow: 0px 0px 5px rgba($color: $crimson, $alpha: 0.5);
+      color: $crimson;
+    }
+
+    &_border-none {
+      border: none;
+      &:hover {
+        border: none;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__status-bar {
+    display: flex;
+    align-items: center;
+
+    font-size: 0.8rem;
+    color: $gray_dark;
+
+    @include media-laptop() {
+      font-size: 1rem;
+      margin: 0 10px;
+      margin-top: 8px;
+    }
+  }
+}

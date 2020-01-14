@@ -19,9 +19,17 @@
         <input class="todo__input input input_text" id="todo-input" type="text" placeholder="What needs to be done ?">
         <button class="todo__toggle-all-button button" id="toggle-all-btn">❯</button>
       </div>
-
+      <div class="filters todo__filters">
+        <div class="filters__status-bar">
+          1 item left
+        </div>
+        <div class="filters__button filters__button_active button">All</div>
+        <div class="filters__button button">Active</div>
+        <div class="filters__button button">Completed</div>
+        <div class="filters__button filters__button_border-none button">Clear completed</div>
+      </div>
       <div class="todo__todos-container" id="todos-container">
-
+        <!-- ToDo item template -->
         <!-- <div class="todo-item" data-todoId="1">
           <input type="text" value="ToDo" class="input input_text todo-item__input todo-item__input_for-edit">
           <label class="todo-item__label" for="todo-1">
@@ -31,9 +39,7 @@
           <span class="todo-item__input">ToDo </span>
           <div class="todo-item__delete-btn"></div>
         </div> -->
-
       </div>
-
     </div>
   </div>
 </body>

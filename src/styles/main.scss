@@ -1,11 +1,11 @@
 @import "./variables.scss";
-@import "./atomic.scss";
 @import "./header";
 @import "./input";
 @import "./button";
 @import "./todo";
 @import "./todo-item";
 @import "./alert";
+@import "./filters";
 
 *,
 *::after,
@@ -42,7 +42,8 @@ body {
   padding: 3% 0;
 
   @include media-laptop() {
-    width: 70%;
+    width: 100%;
+    padding: 9%;
   }
 
   @include media-mobile() {
