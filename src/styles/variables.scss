@@ -1,3 +1,7 @@
+$laptop-width: 1024px;
+$mobile-width: 480px;
+
+// colors
 $background-color: rgb(245, 245, 245);
 $crimson: #dd133b;
 $white: #ffffff;
@@ -16,4 +20,16 @@ $green: #1f8d1f;
 
   color: $green;
   font-weight: bold;
+}
+
+@mixin media-laptop {
+  @media screen and (max-width: $laptop-width) {
+    @content;
+  }
+}
+
+@mixin media-mobile {
+  @media screen and (max-width: $mobile-width) {
+    @content;
+  }
 }
