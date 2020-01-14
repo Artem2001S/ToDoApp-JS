@@ -17,9 +17,11 @@ const $todoContainer = document.querySelector('#todos-container');
 
 const getIdFromParent = ($element) => Number($element.parentNode.dataset.todoid);
 
+let counter;
 if (isThereTodos) {
   const newData = storage.getData()
-    .map((todoItem) => new TodoItem(todoItem.todoText, Number(todoItem.todoId)));
+    .map((todoItem) => new TodoItem(todoItem.todoText,
+      Number(todoItem.todoId), todoItem.isCompleted));
 
   storage.setData(newData);
   const todoIdentificators = [];
@@ -30,12 +32,12 @@ if (isThereTodos) {
   });
 
   const maxId = Math.max(...todoIdentificators);
-  const counter = idGenerator(maxId + 1, 1);
-  TodoItem.prototype.generateId = () => counter();
+  counter = idGenerator(maxId + 1, 1);
 } else {
-  const counter = idGenerator(1, 1);
-  TodoItem.prototype.generateId = () => counter();
+  counter = idGenerator(1, 1);
 }
+
+TodoItem.prototype.generateId = () => counter();
 
 $todoInput.addEventListener('keypress', ({ key }) => {
   if (key === 'Enter') {
@@ -67,5 +69,14 @@ $todoContainer.addEventListener('click', ({ target }) => {
   if (target.classList.contains('todo-item__delete-btn')) {
     const todoItem = storage.removeObject((object) => object.todoId === getIdFromParent(target));
     $todoContainer.removeChild(todoItem.$todoItem);
+  }
+
+  if (target.classList.contains('todo-item__toggle')) {
+    const todoItem = storage
+      .getObject((object) => object.todoId === getIdFromParent(target.parentNode));
+    todoItem.isCompleted = !todoItem.isCompleted;
+    storage.updateObject((object) => object.todoId === getIdFromParent(target.parentNode),
+      { isCompleted: todoItem.isCompleted });
+    todoItem.isCompletedChanged();
   }
 });

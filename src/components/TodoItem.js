@@ -1,10 +1,10 @@
 import utils from './utils';
 
 export default class TodoItem {
-  constructor(todoText, todoId) {
+  constructor(todoText, todoId, isCompleted) {
     this.todoText = todoText;
     this.todoId = todoId || this.generateId();
-    this.isCompleted = false;
+    this.isCompleted = isCompleted || false;
   }
 
   getTodoObject() {
@@ -19,7 +19,14 @@ export default class TodoItem {
     this.$todoText = utils.createDOMElement('span', { className: 'todo-item__input' }, [this.todoText]);
     const $todoDeleteBtn = utils.createDOMElement('div', { className: 'todo-item__delete-btn' });
 
-    const $todoCheckbox = utils.createDOMElement('input', { type: 'checkbox', className: 'todo-item__checkbox', id: this.todoId });
+    const $todoCheckbox = utils.createDOMElement('input',
+      {
+        type: 'checkbox',
+        className: 'todo-item__checkbox',
+        id: this.todoId,
+        checked: this.isCompleted,
+      });
+
     const $todoToggleBtn = utils.createDOMElement('div', { className: 'todo-item__toggle' });
 
     const $label = utils.createDOMElement('label',
@@ -28,6 +35,9 @@ export default class TodoItem {
     this.$todoItem = utils.createDOMElement('div',
       { 'data-todoId': this.todoId, className: 'todo-item' }, [$label, this.$todoText, $todoDeleteBtn]);
 
+    if (this.isCompleted) {
+      this.isCompletedChanged();
+    }
     return this.$todoItem;
   }
 
@@ -59,5 +69,9 @@ export default class TodoItem {
 
     this.$todoItem.prepend($inputForEdit);
     $inputForEdit.focus();
+  }
+
+  isCompletedChanged() {
+    this.$todoText.classList.toggle('todo-item__input_completed');
   }
 }
