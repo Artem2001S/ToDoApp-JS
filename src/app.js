@@ -14,7 +14,9 @@ const variables = {
 
 const $todoInput = document.getElementById('todo-input');
 const $todoContainer = document.querySelector('#todos-container');
+const $toggleAll = document.getElementById('toggle-all-btn');
 
+// get todo id
 const getIdFromParent = ($element) => Number($element.parentNode.dataset.todoid);
 
 let counter;
@@ -31,8 +33,14 @@ if (isThereTodos) {
     todoIdentificators.push(todoItem.todoId);
   });
 
+  if (storage.checkEvery((todo) => todo.isCompleted)) {
+    $toggleAll.classList.add('todo__toggle-all-button_active');
+  }
+
   const maxId = Math.max(...todoIdentificators);
   counter = idGenerator(maxId + 1, 1);
+
+  $toggleAll.style.display = 'block';
 } else {
   counter = idGenerator(1, 1);
 }
@@ -46,6 +54,12 @@ $todoInput.addEventListener('keypress', ({ key }) => {
     $todoInput.value = '';
 
     storage.addObject(todoItem);
+
+    if (getComputedStyle($toggleAll).getPropertyValue('display') === 'none') {
+      $toggleAll.style.display = 'block';
+    }
+
+    $toggleAll.classList.remove('todo__toggle-all-button_active');
   }
 });
 
@@ -69,14 +83,59 @@ $todoContainer.addEventListener('click', ({ target }) => {
   if (target.classList.contains('todo-item__delete-btn')) {
     const todoItem = storage.removeObject((object) => object.todoId === getIdFromParent(target));
     $todoContainer.removeChild(todoItem.$todoItem);
+
+    if (storage.getItemsCount() === 0) {
+      $toggleAll.style.display = 'none';
+    }
+
+    if (storage.checkEvery((todo) => todo.isCompleted)) {
+      $toggleAll.classList.add('todo__toggle-all-button_active');
+    } else {
+      $toggleAll.classList.remove('todo__toggle-all-button_active');
+    }
   }
 
   if (target.classList.contains('todo-item__toggle')) {
     const todoItem = storage
       .getObject((object) => object.todoId === getIdFromParent(target.parentNode));
-    todoItem.isCompleted = !todoItem.isCompleted;
+
+    todoItem.isCompleted = !todoItem.$todoCheckbox.checked;
     storage.updateObject((object) => object.todoId === getIdFromParent(target.parentNode),
       { isCompleted: todoItem.isCompleted });
+
     todoItem.isCompletedChanged();
+
+    if (storage.checkEvery((todo) => todo.isCompleted)) {
+      $toggleAll.classList.add('todo__toggle-all-button_active');
+    } else {
+      $toggleAll.classList.remove('todo__toggle-all-button_active');
+    }
+  }
+});
+
+$toggleAll.addEventListener('click', () => {
+  let newToggleValue = true;
+  if (storage.checkEvery((todo) => todo.isCompleted)) {
+    newToggleValue = false;
+  }
+
+  storage.changeAllData((todo) => {
+    if (todo.isCompleted !== newToggleValue) {
+      /* eslint-disable no-param-reassign */
+      todo.isCompleted = newToggleValue;
+      todo.$todoCheckbox.checked = newToggleValue;
+      /* eslint-enable no-param-reassign */
+      todo.isCompletedChanged();
+
+      storage.updateObject((dataTodo) => dataTodo.todoId === todo.todoId,
+        { isCompleted: newToggleValue });
+    }
+    return todo;
+  });
+
+  if (newToggleValue) {
+    $toggleAll.classList.add('todo__toggle-all-button_active');
+  } else {
+    $toggleAll.classList.remove('todo__toggle-all-button_active');
   }
 });

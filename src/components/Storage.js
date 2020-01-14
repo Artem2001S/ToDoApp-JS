@@ -50,4 +50,16 @@ export default class Storage {
     }
     return false;
   }
+
+  getItemsCount() {
+    return this.data.length;
+  }
+
+  checkEvery(callback) {
+    return this.data.every(callback);
+  }
+
+  changeAllData(callback) {
+    this.data = this.data.map(callback);
+  }
 }

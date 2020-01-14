@@ -19,7 +19,7 @@ export default class TodoItem {
     this.$todoText = utils.createDOMElement('span', { className: 'todo-item__input' }, [this.todoText]);
     const $todoDeleteBtn = utils.createDOMElement('div', { className: 'todo-item__delete-btn' });
 
-    const $todoCheckbox = utils.createDOMElement('input',
+    this.$todoCheckbox = utils.createDOMElement('input',
       {
         type: 'checkbox',
         className: 'todo-item__checkbox',
@@ -30,7 +30,7 @@ export default class TodoItem {
     const $todoToggleBtn = utils.createDOMElement('div', { className: 'todo-item__toggle' });
 
     const $label = utils.createDOMElement('label',
-      { for: this.todoId, className: 'todo-item__label' }, [$todoCheckbox, $todoToggleBtn]);
+      { for: this.todoId, className: 'todo-item__label' }, [this.$todoCheckbox, $todoToggleBtn]);
 
     this.$todoItem = utils.createDOMElement('div',
       { 'data-todoId': this.todoId, className: 'todo-item' }, [$label, this.$todoText, $todoDeleteBtn]);

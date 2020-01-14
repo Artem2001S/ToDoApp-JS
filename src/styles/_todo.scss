@@ -18,7 +18,8 @@
     }
   }
 
-  &__toggle-button {
+  &__toggle-all-button {
+    display: none;
     position: absolute;
     top: 50%;
     left: 6px;
@@ -36,8 +37,12 @@
     transform: translateY(-50%) rotate(90deg);
 
     &:hover {
-      opacity: 0.4;
+      color: $gray_dark;
       box-shadow: none;
+    }
+
+    &_active {
+      opacity: 1;
     }
   }
 
