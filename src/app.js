@@ -2,6 +2,7 @@ import './styles/main.scss';
 import Storage from './components/Storage';
 import TodoItem from './components/TodoItem';
 import idGenerator from './components/idGenerator';
+import utils from './components/utils';
 
 const LOCAL_STORAGE_KEY = 'todoItems';
 
@@ -49,6 +50,11 @@ TodoItem.prototype.generateId = () => counter();
 
 $todoInput.addEventListener('keypress', ({ key }) => {
   if (key === 'Enter') {
+    if ($todoInput.value.trim().length === 0) {
+      utils.showAlert('And what do you need to do ?', 4000);
+      return;
+    }
+
     const todoItem = new TodoItem($todoInput.value.trim());
     $todoContainer.append(todoItem.getTodoDOM());
     $todoInput.value = '';

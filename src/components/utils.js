@@ -1,4 +1,5 @@
 export default {
+  isAlertShown: false,
   createDOMElement(tag, options, childrens) {
     const $element = document.createElement(tag);
 
@@ -17,5 +18,20 @@ export default {
     }
 
     return $element;
+  },
+
+  showAlert(message, hideAlertTimeout) {
+    if (this.isAlertShown) return;
+    this.isAlertShown = true;
+    const $alert = this.createDOMElement('div', { className: 'alert' });
+    $alert.textContent = message;
+    document.body.append($alert);
+    setTimeout(() => {
+      $alert.style.animation = 'hide-alert 1s';
+      $alert.addEventListener('animationend', () => {
+        document.body.removeChild($alert);
+        this.isAlertShown = false;
+      });
+    }, hideAlertTimeout);
   },
 };

@@ -1,0 +1,41 @@
+.alert {
+  position: fixed;
+  z-index: 10;
+  left: 2%;
+  bottom: 5%;
+
+  max-width: 50%;
+  padding: 1rem 1.5rem;
+
+  border-radius: 10px;
+  background-color: rgba($color: $crimson, $alpha: 0.9);
+  color: $background-color;
+  box-shadow: 0 0 25px rgba($color: $crimson, $alpha: 0.7);
+
+  animation: show-alert 1s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes show-alert {
+  from {
+    left: -32%;
+    opacity: 0;
+  }
+
+  to {
+    left: 2%;
+    opacity: 1;
+  }
+}
+
+@keyframes hide-alert {
+  from {
+    left: 2%;
+    opacity: 1;
+  }
+
+  to {
+    left: -32%;
+    opacity: 0;
+  }
+}
