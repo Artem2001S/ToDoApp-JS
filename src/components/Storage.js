@@ -22,11 +22,11 @@ export default class Storage {
     this.data.push(obj);
   }
 
-  removeObject(obj) {
-    const index = this.data
-      .findIndex((element) => JSON.stringify(element) === JSON.stringify(obj));
+  removeObject(filterCallback) {
+    const index = this.data.findIndex(filterCallback);
+    const objectToReturn = this.data[index];
     this.data.splice(index, 1);
-    return this.data;
+    return objectToReturn;
   }
 
   updateObject(filterCallback, newData) {
@@ -44,7 +44,7 @@ export default class Storage {
   }
 
   initFromLocalStorage(key) {
-    if (localStorage.getItem(key) !== null) {
+    if (localStorage.getItem(key) !== null && JSON.parse(localStorage.getItem(key)).length > 0) {
       this.data = JSON.parse(localStorage.getItem(key));
       return true;
     }

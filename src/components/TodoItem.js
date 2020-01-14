@@ -1,10 +1,9 @@
 import utils from './utils';
-import idGenerator from './idGenerator';
 
 export default class TodoItem {
   constructor(todoText, todoId) {
     this.todoText = todoText;
-    this.todoId = todoId || idGenerator();
+    this.todoId = todoId || this.generateId();
     this.isCompleted = false;
   }
 
