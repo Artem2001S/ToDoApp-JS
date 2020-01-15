@@ -4,13 +4,16 @@ import TodoItem from './components/TodoItem';
 import idGenerator from './components/idGenerator';
 import utils from './components/utils';
 
-const LOCAL_STORAGE_KEY = 'todoItems';
+const LOCAL_STORAGE_TODO_ITEMS_KEY = 'todoItems';
+const LOCAL_STORAGE_CURRENT_FILTER_KEY = 'currentFilter';
+const ACTIVE_FILTER_CLASSNAME = 'filters__button_active';
 
 const storage = new Storage();
-const isThereTodos = storage.initFromLocalStorage(LOCAL_STORAGE_KEY);
+const isThereTodos = storage.initFromLocalStorage(LOCAL_STORAGE_TODO_ITEMS_KEY);
 
 const variables = {
   isEditModeActive: false,
+  currentFilter: 'all',
 };
 
 const $todoInput = document.getElementById('todo-input');
@@ -22,6 +25,9 @@ const $filtersContainer = document.getElementById('todo-filters-container');
 const $clearCompleted = document.getElementById('clear-completed-todos');
 
 $filtersContainer.style.display = 'none';
+
+// get todo id
+const getIdFromParent = ($element) => Number($element.parentNode.dataset.todoid);
 
 const checkLists = {
   addTodoCheck() {
@@ -77,11 +83,66 @@ const checkLists = {
     }
 
     checkLists.changeStatusBar();
+    checkLists.checkFilter();
+  },
+
+  checkFilter() {
+    if (variables.currentFilter === 'all') return;
+
+    let availableItems = [];
+
+    // items that are visible to the user
+    const actualItems = [...$todoContainer.querySelectorAll('.todo-item')]
+      .map(($todoItem) => storage
+        .getObject((todo) => todo.todoId === Number($todoItem.dataset.todoid)));
+
+    if (variables.currentFilter === 'active') {
+      availableItems = storage.getData((todo) => !todo.isCompleted);
+    }
+
+    if (variables.currentFilter === 'completed') {
+      availableItems = storage.getData((todo) => todo.isCompleted);
+    }
+
+    // delete unnecessary items
+    actualItems.forEach((todo) => {
+      if (!availableItems.includes(todo)) {
+        $todoContainer.removeChild(todo.$todoItem);
+      }
+    });
+
+    // add new items
+    availableItems.forEach((todo) => {
+      if (!actualItems.includes(todo)) {
+        $todoContainer.append(todo.$todoItem);
+      }
+    });
   },
 };
 
-// get todo id
-const getIdFromParent = ($element) => Number($element.parentNode.dataset.todoid);
+function renderTodos() {
+  const todos = storage.getData();
+  $todoContainer.innerHTML = '';
+
+  todos.forEach((todo) => {
+    $todoContainer.append(todo.$todoItem);
+  });
+}
+
+function applyFilter($btnToSetActive, newFilterValue) {
+  document.querySelector(`.${ACTIVE_FILTER_CLASSNAME}`).classList.remove(ACTIVE_FILTER_CLASSNAME);
+  $btnToSetActive.classList.add(ACTIVE_FILTER_CLASSNAME);
+
+  variables.currentFilter = newFilterValue;
+  switch (newFilterValue) {
+    case 'all':
+      renderTodos();
+      break;
+    default:
+      checkLists.checkFilter();
+      break;
+  }
+}
 
 let todoIdGenerator;
 if (isThereTodos) {
@@ -111,18 +172,47 @@ if (isThereTodos) {
 } else {
   todoIdGenerator = idGenerator(1, 1);
 }
+if (localStorage.getItem(LOCAL_STORAGE_CURRENT_FILTER_KEY) !== null) {
+  variables.currentFilter = localStorage.getItem(LOCAL_STORAGE_CURRENT_FILTER_KEY);
+
+  if (variables.currentFilter !== 'all') {
+    const $btn = document.querySelector(`#filter-${variables.currentFilter}`);
+    applyFilter($btn, variables.currentFilter);
+  }
+}
 
 TodoItem.prototype.generateId = () => todoIdGenerator();
 
+// clear completed todos
 $clearCompleted.addEventListener('click', () => {
   const completedTodos = storage.getData((todo) => todo.isCompleted);
   completedTodos.forEach((todo) => {
     storage.removeObject((object) => object.todoId === todo.todoId);
-    $todoContainer.removeChild(todo.$todoItem);
+
+    if ($todoContainer.contains(todo.$todoItem)) {
+      $todoContainer.removeChild(todo.$todoItem);
+    }
+
     checkLists.deleteTodoCheck();
   });
 });
 
+// filter
+$filtersContainer.addEventListener('click', ({ target }) => {
+  // change active filter
+  if (target.id.startsWith('filter-')) {
+    if (target.classList.contains(ACTIVE_FILTER_CLASSNAME)) {
+      return;
+    }
+
+    // target.classList.add(activeBtnClassName);
+
+    const filterValue = target.id.split('-')[1];
+    applyFilter(target, filterValue);
+  }
+});
+
+// add todo
 $todoInput.addEventListener('keypress', ({ key }) => {
   if (key === 'Enter') {
     if ($todoInput.value.trim().length === 0) {
@@ -131,7 +221,11 @@ $todoInput.addEventListener('keypress', ({ key }) => {
     }
 
     const todoItem = new TodoItem($todoInput.value.trim());
-    $todoContainer.append(todoItem.getTodoDOM());
+    todoItem.getTodoDOM();
+    if (variables.currentFilter !== 'completed') {
+      $todoContainer.append(todoItem.$todoItem);
+    }
+
     $todoInput.value = '';
 
     storage.addObject(todoItem);
@@ -140,6 +234,7 @@ $todoInput.addEventListener('keypress', ({ key }) => {
   }
 });
 
+// edit todo
 $todoContainer.addEventListener('dblclick', ({ target }) => {
   if (target.classList.contains('todo-item__input') && !variables.isEditModeActive) {
     variables.isEditModeActive = true;
@@ -152,8 +247,10 @@ $todoContainer.addEventListener('dblclick', ({ target }) => {
   }
 });
 
-window.addEventListener('beforeunload',
-  () => storage.saveToLocalStorage(LOCAL_STORAGE_KEY));
+window.addEventListener('beforeunload', () => {
+  storage.saveToLocalStorage(LOCAL_STORAGE_TODO_ITEMS_KEY);
+  localStorage.setItem(LOCAL_STORAGE_CURRENT_FILTER_KEY, variables.currentFilter);
+});
 
 $todoContainer.addEventListener('click', ({ target }) => {
   if (target.classList.contains('todo-item__delete-btn')) {
@@ -196,6 +293,7 @@ $toggleAll.addEventListener('click', () => {
     }
 
     checkLists.changeStatusBar();
+    checkLists.checkFilter();
     return todo;
   });
 
