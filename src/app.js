@@ -19,6 +19,7 @@ const $toggleAll = document.getElementById('toggle-all-btn');
 
 const $activeItemsStatusBar = document.getElementById('todo-active-items-status-bar');
 const $filtersContainer = document.getElementById('todo-filters-container');
+const $clearCompleted = document.getElementById('clear-completed-todos');
 
 $filtersContainer.style.display = 'none';
 
@@ -58,9 +59,17 @@ const checkLists = {
 
     textContent += ' left';
     $activeItemsStatusBar.textContent = textContent;
+
+    // if have completed taks -> show 'clear completed' btn
+    if (storage.getData((todo) => todo.isCompleted).length > 0) {
+      $clearCompleted.style.visibility = 'visible';
+    } else {
+      $clearCompleted.style.visibility = 'hidden';
+    }
   },
 
   completedChanged() {
+    // if all todos completed -> show toggle-all button
     if (storage.checkEvery((todo) => todo.isCompleted)) {
       $toggleAll.classList.add('todo__toggle-all-button_active');
     } else {
@@ -104,6 +113,15 @@ if (isThereTodos) {
 }
 
 TodoItem.prototype.generateId = () => todoIdGenerator();
+
+$clearCompleted.addEventListener('click', () => {
+  const completedTodos = storage.getData((todo) => todo.isCompleted);
+  completedTodos.forEach((todo) => {
+    storage.removeObject((object) => object.todoId === todo.todoId);
+    $todoContainer.removeChild(todo.$todoItem);
+    checkLists.deleteTodoCheck();
+  });
+});
 
 $todoInput.addEventListener('keypress', ({ key }) => {
   if (key === 'Enter') {
