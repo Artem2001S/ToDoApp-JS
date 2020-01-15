@@ -168,6 +168,8 @@ $toggleAll.addEventListener('click', () => {
       storage.updateObject((dataTodo) => dataTodo.todoId === todo.todoId,
         { isCompleted: newToggleValue });
     }
+
+    checkLists.changeStatusBar();
     return todo;
   });
 
