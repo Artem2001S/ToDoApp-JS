@@ -16,7 +16,11 @@ const variables = {
 const $todoInput = document.getElementById('todo-input');
 const $todoContainer = document.querySelector('#todos-container');
 const $toggleAll = document.getElementById('toggle-all-btn');
+
 const $activeItemsStatusBar = document.getElementById('todo-active-items-status-bar');
+const $filtersContainer = document.getElementById('todo-filters-container');
+
+$filtersContainer.style.display = 'none';
 
 const checkLists = {
   addTodoCheck() {
@@ -26,11 +30,14 @@ const checkLists = {
 
     $toggleAll.classList.remove('todo__toggle-all-button_active');
     checkLists.changeStatusBar();
+
+    $filtersContainer.style.display = 'flex';
   },
 
   deleteTodoCheck() {
     if (storage.getItemsCount() === 0) {
       $toggleAll.style.display = 'none';
+      $filtersContainer.style.display = 'none';
     }
 
     if (storage.checkEvery((todo) => todo.isCompleted)) {
@@ -89,6 +96,7 @@ if (isThereTodos) {
   todoIdGenerator = idGenerator(maxId + 1, 1);
 
   $toggleAll.style.display = 'block';
+  $filtersContainer.style.display = 'flex';
 
   checkLists.changeStatusBar();
 } else {
