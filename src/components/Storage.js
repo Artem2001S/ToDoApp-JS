@@ -4,7 +4,11 @@ export default class Storage {
     this.data = data || [];
   }
 
-  getData() {
+  getData(filterCallback) {
+    if (filterCallback) {
+      return this.data.filter(filterCallback);
+    }
+
     return this.data;
   }
 

@@ -16,11 +16,58 @@ const variables = {
 const $todoInput = document.getElementById('todo-input');
 const $todoContainer = document.querySelector('#todos-container');
 const $toggleAll = document.getElementById('toggle-all-btn');
+const $activeItemsStatusBar = document.getElementById('todo-active-items-status-bar');
+
+const checkLists = {
+  addTodoCheck() {
+    if (getComputedStyle($toggleAll).getPropertyValue('display') === 'none') {
+      $toggleAll.style.display = 'block';
+    }
+
+    $toggleAll.classList.remove('todo__toggle-all-button_active');
+    checkLists.changeStatusBar();
+  },
+
+  deleteTodoCheck() {
+    if (storage.getItemsCount() === 0) {
+      $toggleAll.style.display = 'none';
+    }
+
+    if (storage.checkEvery((todo) => todo.isCompleted)) {
+      $toggleAll.classList.add('todo__toggle-all-button_active');
+    } else {
+      $toggleAll.classList.remove('todo__toggle-all-button_active');
+    }
+    checkLists.changeStatusBar();
+  },
+
+  changeStatusBar() {
+    const { length } = storage.getData((todo) => !todo.isCompleted);
+    let textContent = `${length} item`;
+
+    if (length !== 1) {
+      textContent += 's';
+    }
+
+    textContent += ' left';
+    $activeItemsStatusBar.textContent = textContent;
+  },
+
+  completedChanged() {
+    if (storage.checkEvery((todo) => todo.isCompleted)) {
+      $toggleAll.classList.add('todo__toggle-all-button_active');
+    } else {
+      $toggleAll.classList.remove('todo__toggle-all-button_active');
+    }
+
+    checkLists.changeStatusBar();
+  },
+};
 
 // get todo id
 const getIdFromParent = ($element) => Number($element.parentNode.dataset.todoid);
 
-let counter;
+let todoIdGenerator;
 if (isThereTodos) {
   const newData = storage.getData()
     .map((todoItem) => new TodoItem(todoItem.todoText,
@@ -39,14 +86,16 @@ if (isThereTodos) {
   }
 
   const maxId = Math.max(...todoIdentificators);
-  counter = idGenerator(maxId + 1, 1);
+  todoIdGenerator = idGenerator(maxId + 1, 1);
 
   $toggleAll.style.display = 'block';
+
+  checkLists.changeStatusBar();
 } else {
-  counter = idGenerator(1, 1);
+  todoIdGenerator = idGenerator(1, 1);
 }
 
-TodoItem.prototype.generateId = () => counter();
+TodoItem.prototype.generateId = () => todoIdGenerator();
 
 $todoInput.addEventListener('keypress', ({ key }) => {
   if (key === 'Enter') {
@@ -61,14 +110,9 @@ $todoInput.addEventListener('keypress', ({ key }) => {
 
     storage.addObject(todoItem);
 
-    if (getComputedStyle($toggleAll).getPropertyValue('display') === 'none') {
-      $toggleAll.style.display = 'block';
-    }
-
-    $toggleAll.classList.remove('todo__toggle-all-button_active');
+    checkLists.addTodoCheck();
   }
 });
-
 
 $todoContainer.addEventListener('dblclick', ({ target }) => {
   if (target.classList.contains('todo-item__input') && !variables.isEditModeActive) {
@@ -90,15 +134,7 @@ $todoContainer.addEventListener('click', ({ target }) => {
     const todoItem = storage.removeObject((object) => object.todoId === getIdFromParent(target));
     $todoContainer.removeChild(todoItem.$todoItem);
 
-    if (storage.getItemsCount() === 0) {
-      $toggleAll.style.display = 'none';
-    }
-
-    if (storage.checkEvery((todo) => todo.isCompleted)) {
-      $toggleAll.classList.add('todo__toggle-all-button_active');
-    } else {
-      $toggleAll.classList.remove('todo__toggle-all-button_active');
-    }
+    checkLists.deleteTodoCheck();
   }
 
   if (target.classList.contains('todo-item__toggle')) {
@@ -111,11 +147,7 @@ $todoContainer.addEventListener('click', ({ target }) => {
 
     todoItem.isCompletedChanged();
 
-    if (storage.checkEvery((todo) => todo.isCompleted)) {
-      $toggleAll.classList.add('todo__toggle-all-button_active');
-    } else {
-      $toggleAll.classList.remove('todo__toggle-all-button_active');
-    }
+    checkLists.completedChanged();
   }
 });
 
