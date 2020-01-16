@@ -9,7 +9,6 @@ const LOCAL_STORAGE_CURRENT_FILTER_KEY = 'currentFilter';
 const ACTIVE_FILTER_CLASSNAME = 'filters__button_active';
 
 const storage = new Storage();
-const isThereTodos = storage.initFromLocalStorage(LOCAL_STORAGE_TODO_ITEMS_KEY);
 
 const variables = {
   isEditModeActive: false,
@@ -17,10 +16,10 @@ const variables = {
 };
 
 const $todoInput = document.getElementById('todo-input');
-const $todoContainer = document.querySelector('#todos-container');
+const $todosContainer = document.querySelector('#todos-container');
 const $toggleAll = document.getElementById('toggle-all-btn');
 
-const $activeItemsStatusBar = document.getElementById('todo-active-items-status-bar');
+const $activeItemsCountStatusBar = document.getElementById('todo-active-items-status-bar');
 const $filtersContainer = document.getElementById('todo-filters-container');
 const $clearCompleted = document.getElementById('clear-completed-todos');
 
@@ -64,7 +63,7 @@ const checkLists = {
     }
 
     textContent += ' left';
-    $activeItemsStatusBar.textContent = textContent;
+    $activeItemsCountStatusBar.textContent = textContent;
 
     // if have completed taks -> show 'clear completed' btn
     if (storage.getData((todo) => todo.isCompleted).length > 0) {
@@ -92,7 +91,7 @@ const checkLists = {
     let availableItems = [];
 
     // items that are visible to the user
-    const actualItems = [...$todoContainer.querySelectorAll('.todo-item')]
+    const actualItems = [...$todosContainer.querySelectorAll('.todo-item')]
       .map(($todoItem) => storage
         .getObject((todo) => todo.todoId === Number($todoItem.dataset.todoid)));
 
@@ -107,25 +106,30 @@ const checkLists = {
     // delete unnecessary items
     actualItems.forEach((todo) => {
       if (!availableItems.includes(todo)) {
-        $todoContainer.removeChild(todo.$todoItem);
+        $todosContainer.removeChild(todo.$todoItem);
       }
     });
 
     // add new items
     availableItems.forEach((todo) => {
       if (!actualItems.includes(todo)) {
-        $todoContainer.append(todo.$todoItem);
+        $todosContainer.append(todo.$todoItem);
       }
     });
+  },
+
+  checkToggleAll() {
+    checkLists.changeStatusBar();
+    checkLists.checkFilter();
   },
 };
 
 function renderTodos() {
   const todos = storage.getData();
-  $todoContainer.innerHTML = '';
+  $todosContainer.innerHTML = '';
 
   todos.forEach((todo) => {
-    $todoContainer.append(todo.$todoItem);
+    $todosContainer.append(todo.$todoItem || todo.getTodoDOM());
   });
 }
 
@@ -144,6 +148,7 @@ function applyFilter($btnToSetActive, newFilterValue) {
   }
 }
 
+const isThereTodos = storage.initFromLocalStorage(LOCAL_STORAGE_TODO_ITEMS_KEY);
 let todoIdGenerator;
 if (isThereTodos) {
   const newData = storage.getData()
@@ -154,9 +159,10 @@ if (isThereTodos) {
   const todoIdentificators = [];
 
   storage.getData().forEach((todoItem) => {
-    $todoContainer.append(todoItem.getTodoDOM());
     todoIdentificators.push(todoItem.todoId);
   });
+
+  renderTodos();
 
   if (storage.checkEvery((todo) => todo.isCompleted)) {
     $toggleAll.classList.add('todo__toggle-all-button_active');
@@ -189,8 +195,8 @@ $clearCompleted.addEventListener('click', () => {
   completedTodos.forEach((todo) => {
     storage.removeObject((object) => object.todoId === todo.todoId);
 
-    if ($todoContainer.contains(todo.$todoItem)) {
-      $todoContainer.removeChild(todo.$todoItem);
+    if ($todosContainer.contains(todo.$todoItem)) {
+      $todosContainer.removeChild(todo.$todoItem);
     }
 
     checkLists.deleteTodoCheck();
@@ -205,8 +211,6 @@ $filtersContainer.addEventListener('click', ({ target }) => {
       return;
     }
 
-    // target.classList.add(activeBtnClassName);
-
     const filterValue = target.id.split('-')[1];
     applyFilter(target, filterValue);
   }
@@ -216,14 +220,14 @@ $filtersContainer.addEventListener('click', ({ target }) => {
 $todoInput.addEventListener('keypress', ({ key }) => {
   if (key === 'Enter') {
     if ($todoInput.value.trim().length === 0) {
-      utils.showAlert('And what do you need to do ?', 4000);
+      utils.showAlert('Please, enter data!', 4000);
       return;
     }
 
     const todoItem = new TodoItem($todoInput.value.trim());
     todoItem.getTodoDOM();
     if (variables.currentFilter !== 'completed') {
-      $todoContainer.append(todoItem.$todoItem);
+      $todosContainer.append(todoItem.$todoItem);
     }
 
     $todoInput.value = '';
@@ -235,7 +239,7 @@ $todoInput.addEventListener('keypress', ({ key }) => {
 });
 
 // edit todo
-$todoContainer.addEventListener('dblclick', ({ target }) => {
+$todosContainer.addEventListener('dblclick', ({ target }) => {
   if (target.classList.contains('todo-item__input') && !variables.isEditModeActive) {
     variables.isEditModeActive = true;
 
@@ -252,14 +256,16 @@ window.addEventListener('beforeunload', () => {
   localStorage.setItem(LOCAL_STORAGE_CURRENT_FILTER_KEY, variables.currentFilter);
 });
 
-$todoContainer.addEventListener('click', ({ target }) => {
+$todosContainer.addEventListener('click', ({ target }) => {
+  // delete todo
   if (target.classList.contains('todo-item__delete-btn')) {
     const todoItem = storage.removeObject((object) => object.todoId === getIdFromParent(target));
-    $todoContainer.removeChild(todoItem.$todoItem);
+    $todosContainer.removeChild(todoItem.$todoItem);
 
     checkLists.deleteTodoCheck();
   }
 
+  // complete/uncomplete todo
   if (target.classList.contains('todo-item__toggle')) {
     const todoItem = storage
       .getObject((object) => object.todoId === getIdFromParent(target.parentNode));
@@ -292,8 +298,7 @@ $toggleAll.addEventListener('click', () => {
         { isCompleted: newToggleValue });
     }
 
-    checkLists.changeStatusBar();
-    checkLists.checkFilter();
+    checkLists.checkToggleAll();
     return todo;
   });
 
