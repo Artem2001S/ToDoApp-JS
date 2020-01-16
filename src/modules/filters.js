@@ -16,7 +16,7 @@ export default {
       }
     }
 
-    // filter event
+    // filtering event
     $filtersContainer.addEventListener('click', ({ target }) => {
       // change active filter
       if (target.id.startsWith('filter-')) {
@@ -49,14 +49,10 @@ export default {
     $btnToSetActive.classList.add(ACTIVE_FILTER_CLASSNAME);
 
     variables.currentFilter = newFilterValue;
-    switch (newFilterValue) {
-      case 'all':
-        renderTodos();
-        break;
-      default:
-        checkLists.checkFilter();
-        break;
+    if (newFilterValue === 'all') {
+      renderTodos();
+    } else {
+      checkLists.checkFilter();
     }
   },
-
 };

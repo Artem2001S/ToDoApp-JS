@@ -4,8 +4,7 @@ import idGenerator from './modules/idGenerator';
 import utils from './modules/utils';
 import { LOCAL_STORAGE_TODO_ITEMS_KEY, LOCAL_STORAGE_CURRENT_FILTER_KEY } from './modules/constants';
 import {
-  renderTodos, storage, variables, $todoInput, $todosContainer,
-  $toggleAll, $filtersContainer,
+  renderTodos, storage, variables, $todoInput, $todosContainer, $toggleAll, $filtersContainer,
 } from './modules/globalObjects';
 import filters from './modules/filters';
 import checkLists from './modules/checkLists';

@@ -29,8 +29,11 @@ export default {
     $alert.textContent = message;
     document.body.append($alert);
 
+    // hide alert
     setTimeout(() => {
       $alert.style.animation = 'hide-alert 1s';
+
+      // remove alert from DOM after animation
       $alert.addEventListener('animationend', () => {
         document.body.removeChild($alert);
         this.isAlertShown = false;
