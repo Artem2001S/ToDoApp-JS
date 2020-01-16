@@ -2,6 +2,7 @@ import {
   storage, variables, $todosContainer, $toggleAll,
   $activeItemsCountStatusBar, $filtersContainer, $clearCompleted,
 } from './globalObjects';
+import progressBar from './progressBar';
 
 export default {
   addTodoCheck() {
@@ -30,11 +31,21 @@ export default {
   },
 
   changeStatusBar() {
+    // active items count
     const { length } = storage.getData((todo) => !todo.isCompleted);
     let textContent = `${length} item`;
 
     if (length !== 1) {
       textContent += 's';
+    }
+
+    if (storage.getItemsCount() === 0) {
+      progressBar.hideElements();
+    } else {
+      progressBar.showElements();
+      const completedTodos = storage.getItemsCount() - length;
+      const percentValue = Math.round((100 * completedTodos) / storage.getItemsCount());
+      progressBar.setNewValue(percentValue);
     }
 
     textContent += ' left';

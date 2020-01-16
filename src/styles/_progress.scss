@@ -1,0 +1,38 @@
+.progress {
+  display: flex;
+  align-items: center;
+  padding: 0 3rem;
+
+  &__value {
+    color: $gray_dark;
+    padding: 0 0.5rem;
+  }
+
+  &__background {
+    position: relative;
+    width: 100%;
+    height: 8px;
+
+    border-radius: 8px;
+
+    background-color: $gray;
+  }
+
+  &__active {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    width: 25%;
+    height: 100%;
+
+    border-radius: 8px;
+    background-color: $crimson;
+    box-shadow: 0 0 20px rgba($color: $crimson, $alpha: 0.5);
+
+    transition: width 1.3s ease;
+    &:hover {
+      width: 88%;
+    }
+  }
+}
