@@ -19,11 +19,13 @@
   &:hover {
     opacity: 1;
     & .tip__content {
+      visibility: visible;
       opacity: 1;
     }
   }
 
   &__content {
+    visibility: hidden;
     position: absolute;
     left: 3rem;
     top: 10px;
