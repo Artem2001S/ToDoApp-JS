@@ -22,10 +22,13 @@ export default {
 
   showAlert(message, hideAlertTimeout) {
     if (this.isAlertShown) return;
+
     this.isAlertShown = true;
+
     const $alert = this.createDOMElement('div', { className: 'alert' });
     $alert.textContent = message;
     document.body.append($alert);
+
     setTimeout(() => {
       $alert.style.animation = 'hide-alert 1s';
       $alert.addEventListener('animationend', () => {
@@ -34,4 +37,6 @@ export default {
       });
     }, hideAlertTimeout);
   },
+
+  getIdFromParent($element) { return Number($element.parentNode.dataset.todoid); },
 };

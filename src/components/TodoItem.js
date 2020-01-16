@@ -41,7 +41,7 @@ export default class TodoItem {
     return this.$todoItem;
   }
 
-  createInputForEditTodo(storage, variables) {
+  createInputForEditTodo(storage, variables, handler) {
     this.$todoText.textContent = '';
 
     const $inputForEdit = utils.createDOMElement('input',
@@ -51,15 +51,7 @@ export default class TodoItem {
         value: this.todoText,
       });
 
-    $inputForEdit.addEventListener('blur', () => {
-      // eslint-disable-next-line no-param-reassign
-      variables.isEditModeActive = false;
-
-      storage.updateObject((todo) => todo.todoId === this.todoId,
-        { todoText: $inputForEdit.value });
-      this.$todoText.textContent = $inputForEdit.value;
-      this.$todoItem.removeChild($inputForEdit);
-    });
+    $inputForEdit.addEventListener('blur', handler.bind($inputForEdit, this));
 
     $inputForEdit.addEventListener('keypress', ({ key }) => {
       if (key === 'Enter') {
