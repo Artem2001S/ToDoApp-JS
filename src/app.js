@@ -1,17 +1,17 @@
 import './styles/main.scss';
-import TodoItem from './components/TodoItem';
-import idGenerator from './components/idGenerator';
-import utils from './components/utils';
-import { LOCAL_STORAGE_TODO_ITEMS_KEY, LOCAL_STORAGE_CURRENT_FILTER_KEY } from './components/constants';
+import TodoItem from './modules/TodoItem';
+import idGenerator from './modules/idGenerator';
+import utils from './modules/utils';
+import { LOCAL_STORAGE_TODO_ITEMS_KEY, LOCAL_STORAGE_CURRENT_FILTER_KEY } from './modules/constants';
 import {
   renderTodos, storage, variables, $todoInput, $todosContainer,
   $toggleAll, $filtersContainer,
-} from './components/globalObjects';
-import filters from './components/filters';
-import checkLists from './components/checkLists';
+} from './modules/globalObjects';
+import filters from './modules/filters';
+import checkLists from './modules/checkLists';
 import {
   addTodo, deleteTodo, switchTodo, finishedTodoEditing, switchAllTodos,
-} from './components/todoItemActions';
+} from './modules/todoItemActions';
 
 function init() {
   const isThereAnythingTodo = storage.initFromLocalStorage(LOCAL_STORAGE_TODO_ITEMS_KEY);
