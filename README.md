@@ -1,6 +1,5 @@
 # ToDoApp-JS
 ToDo application
-[![Netlify Status](https://api.netlify.com/api/v1/badges/91a8ed41-5215-4caa-95b8-26ef32fabdc2/deploy-status)](https://www.netlify.com/)
 
 [Live Demo](https://todo-application-js.netlify.com/)
 
