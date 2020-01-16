@@ -1,0 +1,44 @@
+.tip {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 2rem;
+  height: 2rem;
+
+  border-radius: 50%;
+  border: 1px solid $crimson;
+
+  color: $crimson;;
+
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.8s;
+
+  &:hover {
+    opacity: 1;
+    & .tip__content {
+      opacity: 1;
+    }
+  }
+
+  &__content {
+    position: absolute;
+    left: 3rem;
+    top: 10px;
+
+    width: 8rem;
+    padding: 0.5rem;
+    margin-bottom: 10px;
+
+    border-radius: 10px;
+    border: 1px solid rgba($color: $crimson, $alpha: 0.6);
+
+    font-size: 0.8rem;
+    color: $crimson;
+
+    opacity: 0;
+    transition: opacity 0.8s;
+  }
+}

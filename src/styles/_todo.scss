@@ -9,6 +9,11 @@
     display: none;
   }
 
+  &__tip {
+    margin: auto;
+    margin-top: 2.5rem;
+  }
+
   &__input {
     padding: 1rem;
     padding-left: $toggle-icon-width + 10px;
