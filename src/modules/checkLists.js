@@ -4,6 +4,7 @@ import {
 } from './globalObjects';
 import progressBar from './progressBar';
 
+// checks after actions
 export default {
   addTodoCheck() {
     if (getComputedStyle($toggleAll).getPropertyValue('display') === 'none') {
