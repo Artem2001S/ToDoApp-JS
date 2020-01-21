@@ -4,7 +4,13 @@ import idGenerator from './modules/idGenerator';
 import utils from './modules/utils';
 import { LOCAL_STORAGE_TODO_ITEMS_KEY, LOCAL_STORAGE_CURRENT_FILTER_KEY } from './modules/constants';
 import {
-  renderTodos, storage, variables, $todoInput, $todosContainer, $toggleAll, $filtersContainer,
+  renderTodos,
+  storage,
+  variables,
+  $todoInput,
+  $todosContainer,
+  $toggleAll,
+  $filtersContainer,
 } from './modules/globalObjects';
 import filters from './modules/filters';
 import checkLists from './modules/checkLists';
@@ -62,9 +68,12 @@ init();
 
 // add todo
 $todoInput.addEventListener('keypress', ({ key }) => {
+  const NO_VALUE_MESSAGE = 'Please, enter data!';
+  const HIDE_ALERT_TIMEOUT = 4000;
+
   if (key === 'Enter') {
     if ($todoInput.value.trim().length === 0) {
-      utils.showAlert('Please, enter data!', 4000);
+      utils.showAlert(NO_VALUE_MESSAGE, HIDE_ALERT_TIMEOUT);
       return;
     }
 

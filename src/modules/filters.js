@@ -19,12 +19,12 @@ export default {
     // filtering event
     $filtersContainer.addEventListener('click', ({ target }) => {
       // change active filter
-      if (target.id.startsWith('filter-')) {
+      if (target.hasAttribute('data-filter')) {
         if (target.classList.contains(ACTIVE_FILTER_CLASSNAME)) {
           return;
         }
 
-        const filterValue = target.id.split('-')[1];
+        const filterValue = target.dataset.filter;
         this.applyFilter(target, filterValue);
       }
     });
