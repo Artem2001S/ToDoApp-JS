@@ -1,6 +1,9 @@
 import TodoItem from './TodoItem';
 import {
-  storage, variables, $todosContainer, $toggleAll,
+  storage,
+  variables,
+  $todosContainer,
+  $toggleAll,
 } from './globalObjects';
 import checkLists from './checkLists';
 

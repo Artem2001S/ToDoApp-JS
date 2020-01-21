@@ -1,6 +1,11 @@
 import { LOCAL_STORAGE_CURRENT_FILTER_KEY, ACTIVE_FILTER_CLASSNAME } from './constants';
 import {
-  variables, $filtersContainer, $clearCompleted, storage, $todosContainer, renderTodos,
+  variables,
+  $filtersContainer,
+  $clearCompleted,
+  storage,
+  $todosContainer,
+  renderTodos,
 } from './globalObjects';
 import checkLists from './checkLists';
 

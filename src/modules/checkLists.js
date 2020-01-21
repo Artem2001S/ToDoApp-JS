@@ -1,6 +1,11 @@
 import {
-  storage, variables, $todosContainer, $toggleAll,
-  $activeItemsCountStatusBar, $filtersContainer, $clearCompleted,
+  storage,
+  variables,
+  $todosContainer,
+  $toggleAll,
+  $activeItemsCountStatusBar,
+  $filtersContainer,
+  $clearCompleted,
 } from './globalObjects';
 import progressBar from './progressBar';
 

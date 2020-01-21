@@ -15,7 +15,11 @@ import {
 import filters from './modules/filters';
 import checkLists from './modules/checkLists';
 import {
-  addTodo, deleteTodo, switchTodo, finishedTodoEditing, switchAllTodos,
+  addTodo,
+  deleteTodo,
+  switchTodo,
+  finishedTodoEditing,
+  switchAllTodos,
 } from './modules/todoItemActions';
 
 function init() {
