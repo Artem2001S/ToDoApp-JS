@@ -41,7 +41,7 @@ export default class TodoItem {
     return this.$todoItem;
   }
 
-  createInputForEditTodo(storage, variables, handler) {
+  createInputForEditTodo(handler) {
     this.$todoText.textContent = '';
 
     const $inputForEdit = utils.createDOMElement('input',
@@ -53,8 +53,12 @@ export default class TodoItem {
 
     $inputForEdit.addEventListener('blur', handler.bind($inputForEdit, this));
 
-    $inputForEdit.addEventListener('keypress', ({ key }) => {
+    $inputForEdit.addEventListener('keyup', ({ key }) => {
       if (key === 'Enter') {
+        $inputForEdit.blur();
+      }
+      if (key === 'Escape') {
+        $inputForEdit.value = this.todoText;
         $inputForEdit.blur();
       }
     });

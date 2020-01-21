@@ -88,7 +88,7 @@ $todosContainer.addEventListener('dblclick', ({ target }) => {
     variables.isEditModeActive = true;
     const id = utils.getIdFromParent(target);
     const currentTodoObj = storage.getObject((todo) => todo.todoId === id);
-    currentTodoObj.createInputForEditTodo(storage, variables, finishedTodoEditing);
+    currentTodoObj.createInputForEditTodo(finishedTodoEditing);
   }
 });
 
